@@ -1,4 +1,16 @@
-def ensure_bookmark_path(state, path):
+from typing import Union, Mapping, Sequence, Any, TypeVar
+
+
+_KT = TypeVar('_KT')
+_VT = TypeVar('_VT')
+
+class State(Mapping[str, StateEntry]):
+    
+
+class StateEntry(Mapping[_KT, _VT]):
+
+
+def ensure_bookmark_path(state: Mapping[_KT, Mapping[_KT, _VT]], path: _KT) -> Mapping[_KT, _VT]:
     submap = state
     for path_component in path:
         if submap.get(path_component) is None:
@@ -7,7 +19,7 @@ def ensure_bookmark_path(state, path):
         submap = submap[path_component]
     return state
 
-def write_bookmark(state, tap_stream_id, key, val):
+def write_bookmark(state: Mapping[_KT, _VT], tap_stream_id: str, key: _KT, val: _VT) -> Mapping[_KT, _VT]:
     state = ensure_bookmark_path(state, ['bookmarks', tap_stream_id])
     state['bookmarks'][tap_stream_id][key] = val
     return state
